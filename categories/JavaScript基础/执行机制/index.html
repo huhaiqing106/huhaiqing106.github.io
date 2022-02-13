@@ -20,27 +20,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-  <meta name="description" content="变量和类型作用域和闭包原型和原型链执行机制语法和APIES特性">
+  <meta name="description" content="知识点Event Loop机制 浏览器的事件循环机制：JS先执行同步代码，遇到异步任务会先挂起在需要执行的时候加入到Task队列中，当执行栈为空，查询是否有异步代码需要执行，执行所有的微任务promise，如果有必要就渲染界面，再开始下一轮事件循环，执行宏任务中的异步代码，比如settimeout等游览器API  并行与并发的区别 并发是宏观概念，我分别有任务 A 和任务 B，在一段时间内通过任务">
 <meta property="og:type" content="website">
-<meta property="og:title" content="JavaScript基础">
-<meta property="og:url" content="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:title" content="Phil&#39;s Blog">
+<meta property="og:url" content="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html">
 <meta property="og:site_name" content="Phil&#39;s Blog">
-<meta property="og:description" content="变量和类型作用域和闭包原型和原型链执行机制语法和APIES特性">
+<meta property="og:description" content="知识点Event Loop机制 浏览器的事件循环机制：JS先执行同步代码，遇到异步任务会先挂起在需要执行的时候加入到Task队列中，当执行栈为空，查询是否有异步代码需要执行，执行所有的微任务promise，如果有必要就渲染界面，再开始下一轮事件循环，执行宏任务中的异步代码，比如settimeout等游览器API  并行与并发的区别 并发是宏观概念，我分别有任务 A 和任务 B，在一段时间内通过任务">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-02-10T14:53:54.000Z">
-<meta property="article:modified_time" content="2022-02-13T09:35:45.809Z">
+<meta property="article:published_time" content="2022-02-13T08:20:26.969Z">
+<meta property="article:modified_time" content="2022-02-13T08:20:26.969Z">
 <meta property="article:author" content="Hu">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/">
+<link rel="canonical" href="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/index.html","path":"categories/JavaScript基础/index.html","title":"JavaScript基础"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html","path":"categories/JavaScript基础/执行机制/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>JavaScript基础 | Phil's Blog
+<title> | Phil's Blog
 </title>
   
 
@@ -124,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%92%8C%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">变量和类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">作用域和闭包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="nav-number">3.</span> <span class="nav-text">原型和原型链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">执行机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%92%8CAPI"><span class="nav-number">5.</span> <span class="nav-text">语法和API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES%E7%89%B9%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">ES特性</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Event-Loop%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text">Event Loop机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%B9%B6%E5%8F%91%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text">并行与并发的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">试题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%EF%BC%9F%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E6%9C%89%E4%BB%80%E4%B9%88%E7%BC%BA%E7%82%B9%EF%BC%9F%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%9B%9E%E8%B0%83%E5%9C%B0%E7%8B%B1%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是回调函数？回调函数有什么缺点？如何解决回调地狱问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%8C%BA%E5%88%AB%EF%BC%9FJS-%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%A5%BD%E5%A4%84%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">进程与线程区别？JS 单线程带来的好处？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%89%A7%E8%A1%8C%E6%A0%88%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">什么是执行栈？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%EF%BC%9F%E8%A7%A3%E9%87%8A%E4%B8%80%E4%B8%8B%E4%BB%80%E4%B9%88%E6%98%AF-Event-Loop-%EF%BC%9F"><span class="nav-number">2.4.</span> <span class="nav-text">异步代码执行顺序？解释一下什么是 Event Loop ？</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -221,13 +221,14 @@
     
     <div class="post-block" lang="zh-CN"><header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">JavaScript基础
+<h1 class="post-title" itemprop="name headline">
 </h1>
 
 <div class="post-meta-container">
   <ul class="breadcrumb">
             <li><a href="/categories/">CATEGORIES</a></li>
-          <li>JAVASCRIPT基础</li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+          <li>执行机制</li>
         
   </ul>
 </div>
@@ -237,7 +238,18 @@
       
       
       <div class="post-body">
-          <h3 id="变量和类型"><a href="#变量和类型" class="headerlink" title="变量和类型"></a><em><a href="%E5%8F%98%E9%87%8F%E5%92%8C%E7%B1%BB%E5%9E%8B/index.html">变量和类型</a></em></h3><h3 id="作用域和闭包"><a href="#作用域和闭包" class="headerlink" title="作用域和闭包"></a><em><a href="%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85/index.html">作用域和闭包</a></em></h3><h3 id="原型和原型链"><a href="#原型和原型链" class="headerlink" title="原型和原型链"></a><em><a href="%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/index.html">原型和原型链</a></em></h3><h3 id="执行机制"><a href="#执行机制" class="headerlink" title="执行机制"></a><em><a href="%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html">执行机制</a></em></h3><h3 id="语法和API"><a href="#语法和API" class="headerlink" title="语法和API"></a><em><a href="%E8%AF%AD%E6%B3%95%E5%92%8CAPI/index.html">语法和API</a></em></h3><h3 id="ES特性"><a href="#ES特性" class="headerlink" title="ES特性"></a><em><a href="ES%E7%89%B9%E6%80%A7/index.html">ES特性</a></em></h3>
+          <h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="Event-Loop机制"><a href="#Event-Loop机制" class="headerlink" title="Event Loop机制"></a>Event Loop机制</h3><ul>
+<li>浏览器的事件循环机制：JS先执行同步代码，遇到异步任务会先挂起在需要执行的时候加入到Task队列中，当执行栈为空，查询是否有异步代码需要执行，执行所有的微任务promise，如果有必要就渲染界面，再开始下一轮事件循环，执行宏任务中的异步代码，比如settimeout等游览器API</li>
+</ul>
+<h3 id="并行与并发的区别"><a href="#并行与并发的区别" class="headerlink" title="并行与并发的区别"></a>并行与并发的区别</h3><ul>
+<li>并发是宏观概念，我分别有任务 A 和任务 B，在一段时间内通过任务间的切换完成了这两个任务，这种情况就可以称之为并发。</li>
+<li>并行是微观概念，假设 CPU 中存在两个核心，那么我就可以同时完成任务 A、B。同时完成多个任务的情况就可以称之为并行。</li>
+</ul>
+<h2 id="试题"><a href="#试题" class="headerlink" title="试题"></a>试题</h2><h3 id="什么是回调函数？回调函数有什么缺点？如何解决回调地狱问题？"><a href="#什么是回调函数？回调函数有什么缺点？如何解决回调地狱问题？" class="headerlink" title="什么是回调函数？回调函数有什么缺点？如何解决回调地狱问题？"></a>什么是回调函数？回调函数有什么缺点？如何解决回调地狱问题？</h3><p>回调函数是一段可执行的代码作为参数传递给函数的函数<br>回调函数容易写出回调地狱（A嵌套B嵌套C），并且把控制权转移给第三方了。<br>Promise，async await，Generator</p>
+<h3 id="进程与线程区别？JS-单线程带来的好处？"><a href="#进程与线程区别？JS-单线程带来的好处？" class="headerlink" title="进程与线程区别？JS 单线程带来的好处？"></a>进程与线程区别？JS 单线程带来的好处？</h3><p>进程是任务管理器中的每个任务叫进程，而线程是进程中的一个任务。<br>JS单线程带来的好处就是假设JS执行与UI渲染是独立开的线程，而JS执行时会涉及操作DOM，这种情况下就容易出现DOM结构未渲染。</p>
+<h3 id="什么是执行栈？"><a href="#什么是执行栈？" class="headerlink" title="什么是执行栈？"></a>什么是执行栈？</h3><p>函数的调用结构，遵循先进后出的原则。</p>
+<h3 id="异步代码执行顺序？解释一下什么是-Event-Loop-？"><a href="#异步代码执行顺序？解释一下什么是-Event-Loop-？" class="headerlink" title="异步代码执行顺序？解释一下什么是 Event Loop ？"></a>异步代码执行顺序？解释一下什么是 Event Loop ？</h3><p>参考知识点</p>
+
       </div>
       
       
@@ -245,7 +257,8 @@
     </div>
   <ul class="breadcrumb">
             <li><a href="/categories/">CATEGORIES</a></li>
-          <li>JAVASCRIPT基础</li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+          <li>执行机制</li>
         
   </ul>
 

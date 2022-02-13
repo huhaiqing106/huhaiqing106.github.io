@@ -20,27 +20,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-  <meta name="description" content="变量和类型作用域和闭包原型和原型链执行机制语法和APIES特性">
+  <meta name="description" content="Array静态函数Array.of替代Array()  Array()如果只传入一个数值返回一个空数值，传入的值会是length属性  静态函数Array.from(..)实例化类（似）数组对象  避免空槽位  Array.from({ length: 4 })   映射  把来自于源的每个值映射&#x2F;转换到返回值   参数1：类数组对象参数2：回调函数参数3：回调函数this绑定   原型方法cop">
 <meta property="og:type" content="website">
-<meta property="og:title" content="JavaScript基础">
-<meta property="og:url" content="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:title" content="Phil&#39;s Blog">
+<meta property="og:url" content="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/%E6%96%B0%E5%A2%9EAPI/index.html">
 <meta property="og:site_name" content="Phil&#39;s Blog">
-<meta property="og:description" content="变量和类型作用域和闭包原型和原型链执行机制语法和APIES特性">
+<meta property="og:description" content="Array静态函数Array.of替代Array()  Array()如果只传入一个数值返回一个空数值，传入的值会是length属性  静态函数Array.from(..)实例化类（似）数组对象  避免空槽位  Array.from({ length: 4 })   映射  把来自于源的每个值映射&#x2F;转换到返回值   参数1：类数组对象参数2：回调函数参数3：回调函数this绑定   原型方法cop">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-02-10T14:53:54.000Z">
-<meta property="article:modified_time" content="2022-02-13T09:35:45.809Z">
+<meta property="article:published_time" content="2022-02-13T09:19:27.198Z">
+<meta property="article:modified_time" content="2022-02-13T09:19:27.198Z">
 <meta property="article:author" content="Hu">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/">
+<link rel="canonical" href="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/%E6%96%B0%E5%A2%9EAPI/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/index.html","path":"categories/JavaScript基础/index.html","title":"JavaScript基础"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/%E6%96%B0%E5%A2%9EAPI/index.html","path":"categories/JavaScript基础/ES特性/新增API/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>JavaScript基础 | Phil's Blog
+<title> | Phil's Blog
 </title>
   
 
@@ -124,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%92%8C%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">变量和类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">作用域和闭包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="nav-number">3.</span> <span class="nav-text">原型和原型链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">执行机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%92%8CAPI"><span class="nav-number">5.</span> <span class="nav-text">语法和API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES%E7%89%B9%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">ES特性</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Array"><span class="nav-number">1.</span> <span class="nav-text">Array</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object"><span class="nav-number">2.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Math"><span class="nav-number">3.</span> <span class="nav-text">Math</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">4.</span> <span class="nav-text">字符串</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -221,13 +221,15 @@
     
     <div class="post-block" lang="zh-CN"><header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">JavaScript基础
+<h1 class="post-title" itemprop="name headline">
 </h1>
 
 <div class="post-meta-container">
   <ul class="breadcrumb">
             <li><a href="/categories/">CATEGORIES</a></li>
-          <li>JAVASCRIPT基础</li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/">ES特性</a></li>
+          <li>新增API</li>
         
   </ul>
 </div>
@@ -237,7 +239,90 @@
       
       
       <div class="post-body">
-          <h3 id="变量和类型"><a href="#变量和类型" class="headerlink" title="变量和类型"></a><em><a href="%E5%8F%98%E9%87%8F%E5%92%8C%E7%B1%BB%E5%9E%8B/index.html">变量和类型</a></em></h3><h3 id="作用域和闭包"><a href="#作用域和闭包" class="headerlink" title="作用域和闭包"></a><em><a href="%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85/index.html">作用域和闭包</a></em></h3><h3 id="原型和原型链"><a href="#原型和原型链" class="headerlink" title="原型和原型链"></a><em><a href="%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/index.html">原型和原型链</a></em></h3><h3 id="执行机制"><a href="#执行机制" class="headerlink" title="执行机制"></a><em><a href="%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html">执行机制</a></em></h3><h3 id="语法和API"><a href="#语法和API" class="headerlink" title="语法和API"></a><em><a href="%E8%AF%AD%E6%B3%95%E5%92%8CAPI/index.html">语法和API</a></em></h3><h3 id="ES特性"><a href="#ES特性" class="headerlink" title="ES特性"></a><em><a href="ES%E7%89%B9%E6%80%A7/index.html">ES特性</a></em></h3>
+          <h2 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h2><p><strong>静态函数Array.of替代Array()</strong></p>
+<ul>
+<li>Array()如果只传入一个数值返回一个空数值，传入的值会是length属性</li>
+</ul>
+<p><strong>静态函数Array.from(..)实例化类（似）数组对象</strong></p>
+<ul>
+<li><p>避免空槽位</p>
+<ul>
+<li>Array.from({ length: 4 })</li>
+</ul>
+</li>
+<li><p>映射</p>
+<ul>
+<li>把来自于源的每个值映射/转换到返回值</li>
+</ul>
+</li>
+<li><p>参数1：类数组对象<br>参数2：回调函数<br>参数3：回调函数this绑定</p>
+</li>
+</ul>
+<p><strong>原型方法copyWithin(..)</strong></p>
+<ul>
+<li><p>从一个数组复制一部分到同一个数组的另一个位置，覆盖这个位置原有的值。</p>
+</li>
+<li><p>任何参数为负值，就是当作相对于数组的结束的相对值</p>
+<p>  // 任何参数为负值，就是当作相对于数组的结束的相对值</p>
+<p>  // 4/-2替换1，5/-替换2；[4, 5, 3, 4, 5]</p>
+<p>  [1, 2, 3, 4, 5].copyWithin(0, -2)</p>
+<p>  // 从-2开始复制到-1结束,4/-2替换1；[4, 2, 3, 4, 5]</p>
+<p>  [1, 2, 3, 4, 5].copyWithin(0, -2, -1)</p>
+</li>
+</ul>
+<p><strong>原型方法fill(..    )</strong></p>
+<ul>
+<li>指定值完全（或部分）填充已存在的数组</li>
+</ul>
+<p><strong>原型方法find(..)</strong></p>
+<ul>
+<li>回调返回true/真值，还会返回实际的数组值</li>
+</ul>
+<p><strong>原型方法findIndex(..)</strong></p>
+<ul>
+<li>可以通过回调返回自定义匹配的索引值</li>
+</ul>
+<p><strong>原型方法entries()、values()、keys()</strong></p>
+<h2 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h2><p><strong>静态函数Object.is(..)</strong></p>
+<ul>
+<li>NaN或者-0/0值的比较，使用Object.is</li>
+</ul>
+<p><strong>静态函数Object.getOwnPropertySymbols(..)</strong></p>
+<ul>
+<li>获取对象的所有符号属性</li>
+</ul>
+<p><strong>静态函数Object.setPrototypeOf(..)</strong></p>
+<ul>
+<li>设置对象的[[Prototype]]用于行为委托</li>
+</ul>
+<p><strong>静态函数Object.assign(..)</strong></p>
+<ul>
+<li>不可枚举的属性和非自有的属性都被排除在赋值过程之外</li>
+</ul>
+<h2 id="Math"><a href="#Math" class="headerlink" title="Math"></a>Math</h2><p><strong>Number</strong></p>
+<p><strong>Number.parseInt(..)</strong></p>
+<p><strong>Number.parseFlot(..)</strong></p>
+<p><strong>静态函数Number.isNan(..)</strong></p>
+<ul>
+<li>原有isNaN对非数字的东西都返回true，而不是只对真实的NaN值返回true</li>
+</ul>
+<p><strong>静态函数Number.isFinite(..)</strong></p>
+<ul>
+<li>Number.isFinite(+x)会对x进行强制转换为数字</li>
+</ul>
+<p><strong>静态函数Number.isInteget(..)</strong></p>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><p><strong>静态函数String.raw(..)</strong></p>
+<ul>
+<li>获得不应用任何转义序列的原始字符串</li>
+</ul>
+<p><strong>repeat</strong></p>
+<ul>
+<li>“foo”.repeat(3)  //“foofoofoo”</li>
+</ul>
+<p><strong>startsWith(..)</strong></p>
+<p><strong>endsWith(..)</strong></p>
+<p><strong>includes(..)</strong></p>
+
       </div>
       
       
@@ -245,7 +330,9 @@
     </div>
   <ul class="breadcrumb">
             <li><a href="/categories/">CATEGORIES</a></li>
-          <li>JAVASCRIPT基础</li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/">ES特性</a></li>
+          <li>新增API</li>
         
   </ul>
 

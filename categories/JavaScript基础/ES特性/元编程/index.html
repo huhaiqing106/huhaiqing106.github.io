@@ -20,27 +20,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-  <meta name="description" content="变量和类型作用域和闭包原型和原型链执行机制语法和APIES特性">
+  <meta name="description" content="函数名称元属性公开符号Symbol.iterator  为任意对象定义自己的迭代器逻辑，会覆盖默认的迭代器。  Symbol.toString  指定在[object ___]字符串化时使用的字符串值。  Symbol.hasInstance  构造器函数上的一个方法，接受实例对象值，通过返回true&#x2F;false来指示这个值是否可以被认为是一个实例。 要设置@@hasInstance，必须使用Ob">
 <meta property="og:type" content="website">
-<meta property="og:title" content="JavaScript基础">
-<meta property="og:url" content="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:title" content="Phil&#39;s Blog">
+<meta property="og:url" content="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/%E5%85%83%E7%BC%96%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Phil&#39;s Blog">
-<meta property="og:description" content="变量和类型作用域和闭包原型和原型链执行机制语法和APIES特性">
+<meta property="og:description" content="函数名称元属性公开符号Symbol.iterator  为任意对象定义自己的迭代器逻辑，会覆盖默认的迭代器。  Symbol.toString  指定在[object ___]字符串化时使用的字符串值。  Symbol.hasInstance  构造器函数上的一个方法，接受实例对象值，通过返回true&#x2F;false来指示这个值是否可以被认为是一个实例。 要设置@@hasInstance，必须使用Ob">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-02-10T14:53:54.000Z">
-<meta property="article:modified_time" content="2022-02-13T09:35:45.809Z">
+<meta property="article:published_time" content="2022-02-13T09:23:33.819Z">
+<meta property="article:modified_time" content="2022-02-13T09:23:33.819Z">
 <meta property="article:author" content="Hu">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/">
+<link rel="canonical" href="http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/%E5%85%83%E7%BC%96%E7%A8%8B/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/index.html","path":"categories/JavaScript基础/index.html","title":"JavaScript基础"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/%E5%85%83%E7%BC%96%E7%A8%8B/index.html","path":"categories/JavaScript基础/ES特性/元编程/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>JavaScript基础 | Phil's Blog
+<title> | Phil's Blog
 </title>
   
 
@@ -124,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%92%8C%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">变量和类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">作用域和闭包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="nav-number">3.</span> <span class="nav-text">原型和原型链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">执行机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%92%8CAPI"><span class="nav-number">5.</span> <span class="nav-text">语法和API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES%E7%89%B9%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">ES特性</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%90%8D%E7%A7%B0"><span class="nav-number">1.</span> <span class="nav-text">函数名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%83%E5%B1%9E%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">元属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E5%BC%80%E7%AC%A6%E5%8F%B7"><span class="nav-number">3.</span> <span class="nav-text">公开符号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%80%A7%E6%B5%8B%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">特性测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%BE%E9%80%92%E5%BD%92%E8%B0%83%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">尾递归调用</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -221,13 +221,15 @@
     
     <div class="post-block" lang="zh-CN"><header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">JavaScript基础
+<h1 class="post-title" itemprop="name headline">
 </h1>
 
 <div class="post-meta-container">
   <ul class="breadcrumb">
             <li><a href="/categories/">CATEGORIES</a></li>
-          <li>JAVASCRIPT基础</li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/">ES特性</a></li>
+          <li>元编程</li>
         
   </ul>
 </div>
@@ -237,7 +239,83 @@
       
       
       <div class="post-body">
-          <h3 id="变量和类型"><a href="#变量和类型" class="headerlink" title="变量和类型"></a><em><a href="%E5%8F%98%E9%87%8F%E5%92%8C%E7%B1%BB%E5%9E%8B/index.html">变量和类型</a></em></h3><h3 id="作用域和闭包"><a href="#作用域和闭包" class="headerlink" title="作用域和闭包"></a><em><a href="%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85/index.html">作用域和闭包</a></em></h3><h3 id="原型和原型链"><a href="#原型和原型链" class="headerlink" title="原型和原型链"></a><em><a href="%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/index.html">原型和原型链</a></em></h3><h3 id="执行机制"><a href="#执行机制" class="headerlink" title="执行机制"></a><em><a href="%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html">执行机制</a></em></h3><h3 id="语法和API"><a href="#语法和API" class="headerlink" title="语法和API"></a><em><a href="%E8%AF%AD%E6%B3%95%E5%92%8CAPI/index.html">语法和API</a></em></h3><h3 id="ES特性"><a href="#ES特性" class="headerlink" title="ES特性"></a><em><a href="ES%E7%89%B9%E6%80%A7/index.html">ES特性</a></em></h3>
+          <h2 id="函数名称"><a href="#函数名称" class="headerlink" title="函数名称"></a>函数名称</h2><h2 id="元属性"><a href="#元属性" class="headerlink" title="元属性"></a>元属性</h2><h2 id="公开符号"><a href="#公开符号" class="headerlink" title="公开符号"></a>公开符号</h2><p><strong>Symbol.iterator</strong></p>
+<ul>
+<li>为任意对象定义自己的迭代器逻辑，会覆盖默认的迭代器。</li>
+</ul>
+<p><strong>Symbol.toString</strong></p>
+<ul>
+<li>指定在[object ___]字符串化时使用的字符串值。</li>
+</ul>
+<p><strong>Symbol.hasInstance</strong></p>
+<ul>
+<li>构造器函数上的一个方法，接受实例对象值，通过返回true/false来指示这个值是否可以被认为是一个实例。</li>
+<li>要设置@@hasInstance，必须使用Object.definedProperty(..)</li>
+</ul>
+<p><strong>Symbol.species</strong></p>
+<ul>
+<li>@@species，控制要生成实例时，类的内置方法使用哪一个构造器。</li>
+</ul>
+<p><strong>Symbol.toPrimitive</strong></p>
+<ul>
+<li>对象为了某个操作（比如比较==或者相加+）必须被强制转换为一个原生类型值的时候。</li>
+<li>调用ToPrimitive的运算期望的类型，会提供一个提示（hint）指定“string”、“number”、”default”；加法+没有提示（传入“default”），而乘法*提示为“number”，String（arr）提示为“string”。</li>
+</ul>
+<p><strong>Symbol.match</strong></p>
+<p><strong>Symbol.replace</strong></p>
+<p><strong>Symbol.search</strong></p>
+<p><strong>Symbol.split</strong></p>
+<p><strong>Symbol.isConcatSpreadable</strong></p>
+<ul>
+<li>用来指定如果把它传给一个数组的concat(..)是否应该将其展开。（布尔值）</li>
+</ul>
+<p><strong>Symbol.unscopables</strong></p>
+<ul>
+<li>指示使用with语句时哪些属性可以或不可以暴露为词法变量。</li>
+</ul>
+<h2 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h2><ul>
+<li><p>代理是一种你创建的特殊的对象，它“封装”另一个普通对象—或者说档在这个普通对象的前面。</p>
+</li>
+<li><p>可取消代理用Proxy.revocable，接收target和handlers，返回proxy和revode的对象。</p>
+</li>
+<li><p>使用代理</p>
+<ul>
+<li><p>代理在先，代理在后。</p>
+</li>
+<li><p>No Such Property/Method</p>
+</li>
+<li><p>代理hack[[Prototype]]链</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>Reflect API</p>
+<ul>
+<li><p>属性排序</p>
+<ul>
+<li>1、首先，按照数字上升排序，枚举所有整数索引拥有的属性</li>
+<li>2、然后，按照创建顺序枚举其余的拥有的字符串属性名</li>
+<li>3、最后，按照创建顺序枚举拥有的符号属性</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Reflect.ownkeys、Object.getOwnPropertyNames、Object.getOwnPropertySymbols 遵循属性排序规则</li>
+</ul>
+<h2 id="特性测试"><a href="#特性测试" class="headerlink" title="特性测试"></a>特性测试</h2><ul>
+<li><p>FeatureTests.io</p>
+</li>
+<li><p>web worker</p>
+</li>
+</ul>
+<h2 id="尾递归调用"><a href="#尾递归调用" class="headerlink" title="尾递归调用"></a>尾递归调用</h2><ul>
+<li>尾调用的函数调用模式，可以避免额外栈帧分配的方式进行优化</li>
+<li>非TCO优化，其中一种叫做trampolining技术，相当于把每个部分结果用一个函数表示，这些函数或者返回另外一个部分结果函数，或者返回最终结果。</li>
+</ul>
+
       </div>
       
       
@@ -245,7 +323,9 @@
     </div>
   <ul class="breadcrumb">
             <li><a href="/categories/">CATEGORIES</a></li>
-          <li>JAVASCRIPT基础</li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+            <li><a href="/categories/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/">ES特性</a></li>
+          <li>元编程</li>
         
   </ul>
 
