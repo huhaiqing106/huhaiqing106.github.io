@@ -20,25 +20,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-  <meta name="description" content="记录个人学习过程中整理的相关资料，持续建设中......">
+  <meta name="description" content="Promise Promise是事件循环机制 Promise只能被决议（完成或者拒绝）一次 Promise永远在队列尾部添加微观任务，setTimeout等宿主API，则会添加宏观任务 reject后面的东西一定会进入then中的第二个回调，如果没有第二个回调，则进入catch；但是网络异常会直接进入catch不会进入第二个回调  Thenable任何提供了the(…)函数的对象（或函数）都被认为">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Phil&#39;s Blog">
-<meta property="og:url" content="http://example.com/archives/index.html">
+<meta property="og:url" content="http://example.com/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/Promise/index.html">
 <meta property="og:site_name" content="Phil&#39;s Blog">
-<meta property="og:description" content="记录个人学习过程中整理的相关资料，持续建设中......">
+<meta property="og:description" content="Promise Promise是事件循环机制 Promise只能被决议（完成或者拒绝）一次 Promise永远在队列尾部添加微观任务，setTimeout等宿主API，则会添加宏观任务 reject后面的东西一定会进入then中的第二个回调，如果没有第二个回调，则进入catch；但是网络异常会直接进入catch不会进入第二个回调  Thenable任何提供了the(…)函数的对象（或函数）都被认为">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-13T09:08:14.633Z">
+<meta property="article:modified_time" content="2022-02-13T09:08:14.633Z">
 <meta property="article:author" content="Hu">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/archives/">
+<link rel="canonical" href="http://example.com/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/Promise/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/Promise/index.html","path":"资料/JavaScript基础/ES特性/Promise/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>归档 | Phil's Blog</title>
+<title> | Phil's Blog
+</title>
   
 
 
@@ -68,7 +71,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Phil's Blog</h1>
+      <p class="site-title">Phil's Blog</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">Hello,word.</p>
@@ -108,7 +111,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -121,6 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Promise"><span class="nav-number">1.</span> <span class="nav-text">Promise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Thenable"><span class="nav-number">2.</span> <span class="nav-text">Thenable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Promise-API"><span class="nav-number">3.</span> <span class="nav-text">Promise API</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -185,69 +189,144 @@
 </noscript>
 
 
-    <div class="main-inner archive posts-collapse">
-
-
+    <div class="main-inner page posts-expand">
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 2 篇日志。 继续努力。</span>
-      </div>
 
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+
+        
+        <ul class="sub-menu menu">
+          
+            
+          
+          
+              
+  <li class="menu-item menu-item-javascript基础"><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/" rel="section">JavaScript基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-html和css"><a href="/%E8%B5%84%E6%96%99/HTML%E5%92%8CCSS/" rel="section">HTML和CSS</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-计算机基础"><a href="/%E8%B5%84%E6%96%99/" rel="section">计算机基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-数据结构和算法"><a href="/%E8%B5%84%E6%96%99/" rel="section">数据结构和算法</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-运行环境"><a href="/%E8%B5%84%E6%96%99/" rel="section">运行环境</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-框架和类库"><a href="/%E8%B5%84%E6%96%99/" rel="section">框架和类库</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-前端工程"><a href="/%E8%B5%84%E6%96%99/" rel="section">前端工程</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-项目与业务"><a href="/%E8%B5%84%E6%96%99/" rel="section">项目与业务</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-学习提升"><a href="/%E8%B5%84%E6%96%99/" rel="section">学习提升</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-技术之外"><a href="/%E8%B5%84%E6%96%99/" rel="section">技术之外</a></li>
+
+
+          
+        </ul>
+        
+
+        
+        
+      
+  
+
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/">ES特性</a></li>
+          <li>PROMISE</li>
+        
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      <div class="post-body">
+          <h2 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h2><ol>
+<li>Promise是事件循环机制</li>
+<li>Promise只能被决议（完成或者拒绝）一次</li>
+<li>Promise永远在队列尾部添加微观任务，setTimeout等宿主API，则会添加宏观任务</li>
+<li>reject后面的东西一定会进入then中的第二个回调，如果没有第二个回调，则进入catch；但是网络异常会直接进入catch不会进入第二个回调</li>
+</ol>
+<h2 id="Thenable"><a href="#Thenable" class="headerlink" title="Thenable"></a>Thenable</h2><p>任何提供了the(…)函数的对象（或函数）都被认为是thenable，可以使用Promise机制解释</p>
+<h2 id="Promise-API"><a href="#Promise-API" class="headerlink" title="Promise API"></a>Promise API</h2><ol>
+<li><p>Promise.resolve(…) 是thenable的解决方案，它会“封装”成一个真正的Promise</p>
+</li>
+<li><p>Promise.all([…])接受一个或多个值的数组（比如：立即值、promise、thenable）</p>
+</li>
+<li><p>Promise.all([…])等待所有都完成（或者第一个被拒绝）</p>
+<p>Promise.all([])将会立即完成</p>
+</li>
+<li><p>Promise.race([…])等待第一个完成或者拒绝</p>
+<p>Promise.race([])将会永远挂起</p>
+</li>
+</ol>
+
+      </div>
+      
+      
+      
     </div>
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/">JAVASCRIPT基础</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/ES%E7%89%B9%E6%80%A7/">ES特性</a></li>
+          <li>PROMISE</li>
+        
+  </ul>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-02-13T17:40:04+08:00"
-              content="2022-02-13">
-          02-13
-        </time>
-      </div>
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/02/13/%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" itemprop="url">
-            <span itemprop="name">知识体系</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-02-11T10:02:22+08:00"
-              content="2022-02-11">
-          02-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/02/11/React%E4%B8%8ED3%E7%9A%84%E7%BB%93%E5%90%88/" itemprop="url">
-            <span itemprop="name">React与D3的结合</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-
-    </div>
-  </div>
-  
-  
-  
 
 </div>
   </main>
