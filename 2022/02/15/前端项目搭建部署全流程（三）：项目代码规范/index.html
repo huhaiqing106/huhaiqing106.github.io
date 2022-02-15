@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+  <meta name="description" content="前言继上一篇文章基本已经搭建完一个简单的React项目的，这边文章主要是讲项目的代码规范">
+<meta property="og:type" content="website">
+<meta property="og:title" content="前端项目搭建部署全流程（三）：项目代码规范">
+<meta property="og:url" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/index.html">
+<meta property="og:site_name" content="Phil&#39;s Blog">
+<meta property="og:description" content="前言继上一篇文章基本已经搭建完一个简单的React项目的，这边文章主要是讲项目的代码规范">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-15T07:39:41.000Z">
+<meta property="article:modified_time" content="2022-02-15T08:45:28.662Z">
+<meta property="article:author" content="Hu">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/","path":"2022/02/15/前端项目搭建部署全流程（三）：项目代码规范/","title":"前端项目搭建部署全流程（三）：项目代码规范"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>前端项目搭建部署全流程（三）：项目代码规范 | Phil's Blog</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Phil's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Hello,word.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        
+            
+  <li class="menu-item menu-item-资料"><a href="/%E8%B5%84%E6%96%99/" rel="section"><i class="fa fa-th fa-fw"></i>资料</a></li>
+
+
+      
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8eslint%E8%A7%84%E8%8C%83%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">使用eslint规范代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eslint%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">eslint配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eslint-React%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">eslint React配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E5%90%88Prettier%E4%B8%8EEslint%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">结合Prettier与Eslint格式化代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96-1"><span class="nav-number">3.1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prettier%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.</span> <span class="nav-text">Prettier配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vscode%E4%B8%AD%E9%9B%86%E6%88%90eslint%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">vscode中集成eslint配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEsetting-json"><span class="nav-number">4.1.</span> <span class="nav-text">配置setting.json</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Hu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Hu</p>
+  <div class="site-description" itemprop="description">记录个人学习过程中整理的相关资料，持续建设中......</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/huhaiqing106" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;huhaiqing106" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:huhaiqing110@gmail.com" title="E-Mail → mailto:huhaiqing110@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/wo-shi-zhi-hu-da-shen" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;wo-shi-zhi-hu-da-shen" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/360295545966717" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;360295545966717" rel="noopener" target="_blank"><i class="fas fa-blog fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/images/wechat_channel.jpg" title="WeChat → &#x2F;images&#x2F;wechat_channel.jpg"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Hu">
+      <meta itemprop="description" content="记录个人学习过程中整理的相关资料，持续建设中......">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Phil's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端项目搭建部署全流程（三）：项目代码规范
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-02-15 15:39:41 / 修改时间：16:45:28" itemprop="dateCreated datePublished" datetime="2022-02-15T15:39:41+08:00">2022-02-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>继<a href="">上一篇文章</a>基本已经搭建完一个简单的React项目的，这边文章主要是讲项目的代码规范</p>
+<span id="more"></span>
+
+<h2 id="使用eslint规范代码"><a href="#使用eslint规范代码" class="headerlink" title="使用eslint规范代码"></a>使用eslint规范代码</h2><h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add eslint @types/eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin --dev</span><br></pre></td></tr></table></figure>
+
+<p><code>eslint</code> eslint核心代码</p>
+<p><code>@types/eslint</code>eslint的类型定义</p>
+<p><code>@typescript-eslint/parser</code>eslint解析器，用于解析typescript，从而检查和规范Typescript代码</p>
+<p><code>@typescript-eslint/eslint-plugin</code>eslint插件，包含了各类定义好的检测Typescript代码的规范</p>
+<h3 id="eslint配置"><a href="#eslint配置" class="headerlink" title="eslint配置"></a>eslint配置</h3><p>在工程目录下新建.<code>eslintrc.js</code>文件，包含eslint的配置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@type <span class="type">&#123;import(&#x27;eslint&#x27;).Linter.BaseConfig&#125;</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	<span class="attr">parser</span>: <span class="string">&#x27;@typescript-eslint/parser&#x27;</span>, <span class="comment">// 定义ESLint的解析器</span></span><br><span class="line">	<span class="attr">extends</span>: [<span class="string">&#x27;plugin:react/recommended&#x27;</span>, <span class="string">&#x27;plugin:@typescript-eslint/recommended&#x27;</span>], <span class="comment">// 定义文件继承的子规范</span></span><br><span class="line">	<span class="attr">plugins</span>: [<span class="string">&#x27;@typescript-eslint&#x27;</span>], <span class="comment">// 定义该eslint文件所依赖的插件</span></span><br><span class="line">	<span class="attr">env</span>: &#123;</span><br><span class="line">		<span class="comment">// 指定代码的运行环境</span></span><br><span class="line">		<span class="attr">browser</span>: <span class="literal">true</span>,</span><br><span class="line">		<span class="attr">node</span>: <span class="literal">true</span>,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="eslint-React配置"><a href="#eslint-React配置" class="headerlink" title="eslint React配置"></a>eslint React配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@type <span class="type">&#123;import(&#x27;eslint&#x27;).Linter.BaseConfig&#125;</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	...</span><br><span class="line">	<span class="attr">settings</span>: &#123;</span><br><span class="line">		<span class="comment">//自动发现React的版本，从而进行规范react代码</span></span><br><span class="line">		<span class="attr">react</span>: &#123;</span><br><span class="line">			<span class="attr">pragma</span>: <span class="string">&#x27;React&#x27;</span>,</span><br><span class="line">			<span class="attr">version</span>: <span class="string">&#x27;detect&#x27;</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="attr">parserOptions</span>: &#123;</span><br><span class="line">		<span class="comment">//指定ESLint可以解析JSX语法</span></span><br><span class="line">		<span class="attr">ecmaVersion</span>: <span class="number">2019</span>,</span><br><span class="line">		<span class="attr">sourceType</span>: <span class="string">&#x27;module&#x27;</span>,</span><br><span class="line">		<span class="attr">ecmaFeatures</span>: &#123;</span><br><span class="line">			<span class="attr">jsx</span>: <span class="literal">true</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="结合Prettier与Eslint格式化代码"><a href="#结合Prettier与Eslint格式化代码" class="headerlink" title="结合Prettier与Eslint格式化代码"></a>结合Prettier与Eslint格式化代码</h2><h3 id="安装依赖-1"><a href="#安装依赖-1" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add prettier eslint-config-prettier eslint-plugin-prettier --dev</span><br></pre></td></tr></table></figure>
+
+<p><code>prettier</code>插件的核心代码</p>
+<p><code>eslint-config-prettier</code>解决ESLint中的样式规范和prettier中样式规范的冲突，以prettier的样式规范为准，使ESLint中的样式规范自动失效</p>
+<p><code>eslint-plugin-prettier</code>将prettier作为ESLint规范来使用</p>
+<h3 id="Prettier配置"><a href="#Prettier配置" class="headerlink" title="Prettier配置"></a>Prettier配置</h3><p>在工程目录下新建<code>.prettierrc</code>文件</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;useTabs&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">&quot;eslintIntegration&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">	<span class="attr">&quot;stylelintIntegration&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">	<span class="attr">&quot;tabWidth&quot;</span>: <span class="number">2</span>,</span><br><span class="line">	<span class="attr">&quot;singleQuote&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">	<span class="attr">&quot;semi&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">	<span class="attr">&quot;printWidth&quot;</span>: <span class="number">150</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改.<code>eslintrc.js</code>文件，增加配置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@type <span class="type">&#123;import(&#x27;eslint&#x27;).Linter.BaseConfig&#125;</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	<span class="attr">parser</span>: <span class="string">&#x27;@typescript-eslint/parser&#x27;</span>, <span class="comment">// 定义ESLint的解析器</span></span><br><span class="line">	<span class="attr">extends</span>: [</span><br><span class="line">	<span class="string">&#x27;plugin:react/recommended&#x27;</span>, </span><br><span class="line">	<span class="string">&#x27;plugin:@typescript-eslint/recommended&#x27;</span>, </span><br><span class="line">	<span class="string">&#x27;prettier/@typescript-eslint&#x27;</span>, </span><br><span class="line">	<span class="string">&#x27;plugin:prettier/recommended&#x27;</span>], <span class="comment">// 定义文件继承的子规范</span></span><br><span class="line">	....</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>prettier/@typescript-eslint</code>使得@typescript-eslint中的样式规范失效，遵循prettier中的样式规范</p>
+<p><code>plugin:prettier/recommended</code>使用prettier中的样式规范，且如果使得ESLint会检测prettier的格式问题，同样将格式问题以error的形式抛出</p>
+<h2 id="vscode中集成eslint配置"><a href="#vscode中集成eslint配置" class="headerlink" title="vscode中集成eslint配置"></a>vscode中集成eslint配置</h2><h3 id="配置setting-json"><a href="#配置setting-json" class="headerlink" title="配置setting.json"></a>配置setting.json</h3><p>先安装<code>eslin</code>t的插件，然后修改<code>setting.json</code>文件，我配置在当前工作区，没有配到全局的用户配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">&quot;eslint.codeAction.showDocumentation&quot;</span>: &#123;</span><br><span class="line">		<span class="attr">&quot;eslint.enable&quot;</span>: <span class="literal">true</span>, <span class="comment">//是否开启vscode的eslint</span></span><br><span class="line">		<span class="attr">&quot;eslint.autoFixOnSave&quot;</span>: <span class="literal">true</span>, <span class="comment">//是否在保存的时候自动fix eslint</span></span><br><span class="line">		<span class="attr">&quot;eslint.options&quot;</span>: &#123;</span><br><span class="line">			<span class="comment">//指定vscode的eslint所处理的文件的后缀</span></span><br><span class="line">			<span class="attr">&quot;extensions&quot;</span>: [<span class="string">&quot;.js&quot;</span>, <span class="string">&quot;.vue&quot;</span>, <span class="string">&quot;.ts&quot;</span>, <span class="string">&quot;.tsx&quot;</span>]</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="attr">&quot;eslint.validate&quot;</span>: [</span><br><span class="line">			<span class="comment">//确定校验准则</span></span><br><span class="line">			<span class="string">&quot;javascript&quot;</span>,</span><br><span class="line">			<span class="string">&quot;javascriptreact&quot;</span>,</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="attr">&quot;language&quot;</span>: <span class="string">&quot;html&quot;</span>,</span><br><span class="line">				<span class="attr">&quot;autoFix&quot;</span>: <span class="literal">true</span></span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="attr">&quot;language&quot;</span>: <span class="string">&quot;vue&quot;</span>,</span><br><span class="line">				<span class="attr">&quot;autoFix&quot;</span>: <span class="literal">true</span></span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="attr">&quot;language&quot;</span>: <span class="string">&quot;typescript&quot;</span>,</span><br><span class="line">				<span class="attr">&quot;autoFix&quot;</span>: <span class="literal">true</span></span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="attr">&quot;language&quot;</span>: <span class="string">&quot;typescriptreact&quot;</span>,</span><br><span class="line">				<span class="attr">&quot;autoFix&quot;</span>: <span class="literal">true</span></span><br><span class="line">			&#125;</span><br><span class="line">		]</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>查阅还有一些约束手段可以管控代码提交等，个人不太喜欢这种强制管控的方式，所有没有写入进来，查看链接</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903880006844424#heading-2">https://juejin.cn/post/6844903880006844424#heading-2</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Awebpack%E9%85%8D%E7%BD%AE/" rel="prev" title="前端项目搭建部署全流程（二）：webpack配置">
+                  <i class="fa fa-chevron-left"></i> 前端项目搭建部署全流程（二）：webpack配置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%90%AD%E5%BB%BAReact%E9%A1%B9%E7%9B%AE/" rel="next" title="前端项目搭建部署全流程（一）：搭建React项目">
+                  前端项目搭建部署全流程（一）：搭建React项目 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">33</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

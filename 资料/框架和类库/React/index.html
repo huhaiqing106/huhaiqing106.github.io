@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+  <meta name="description" content="知识点优化 immutable  shouldComponetUpdate  组件通信 父子组件通信（props） 兄弟组件通信（通过父组件进行状态管理，A调用父组件修改，父组件通知B） 跨多层级组件通信（ Context API） 任意组件（Redux&#x2F;Event Bus）  Virtual DOM 判断差异  首先从上到下，从左往右遍历对象，就是DOM多叉树的深度遍历，这一步会给每个节点添加索">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Phil&#39;s Blog">
+<meta property="og:url" content="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/React/index.html">
+<meta property="og:site_name" content="Phil&#39;s Blog">
+<meta property="og:description" content="知识点优化 immutable  shouldComponetUpdate  组件通信 父子组件通信（props） 兄弟组件通信（通过父组件进行状态管理，A调用父组件修改，父组件通知B） 跨多层级组件通信（ Context API） 任意组件（Redux&#x2F;Event Bus）  Virtual DOM 判断差异  首先从上到下，从左往右遍历对象，就是DOM多叉树的深度遍历，这一步会给每个节点添加索">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/React/index/621bc885fc65487d527bddc00e580b7ff646a1046ab66aa135b23a08891f9055.png">
+<meta property="og:image" content="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/React/index/56bda40d467abf56e7b5de9bfe9ce70e810c1fc768308b229d690e717161ac17.png">
+<meta property="og:image" content="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/React/index/227323e21ce452ed6dcb0e7f9248c3d97f855f191b055e4c3912170eb9b51f92.png">
+<meta property="article:published_time" content="2022-02-15T06:57:35.474Z">
+<meta property="article:modified_time" content="2022-02-15T06:57:35.474Z">
+<meta property="article:author" content="Hu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/React/index/621bc885fc65487d527bddc00e580b7ff646a1046ab66aa135b23a08891f9055.png">
+
+
+<link rel="canonical" href="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/React/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/React/index.html","path":"资料/框架和类库/React/index.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Phil's Blog
+</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Phil's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Hello,word.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        
+            
+  <li class="menu-item menu-item-资料"><a href="/%E8%B5%84%E6%96%99/" rel="section"><i class="fa fa-th fa-fw"></i>资料</a></li>
+
+
+      
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">组件通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Virtual-DOM"><span class="nav-number">1.3.</span> <span class="nav-text">Virtual DOM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">路由原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue%E4%B8%8EReact%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.5.</span> <span class="nav-text">Vue与React之间的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">React事件机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">试题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Virtual-DOM%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88-Virtual-DOM-%E6%AF%94%E5%8E%9F%E7%94%9F-DOM-%E5%BF%AB%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是 Virtual DOM？为什么 Virtual DOM 比原生 DOM 快？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E5%8E%9F%E7%90%86%EF%BC%9F%E4%B8%A4%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">前端路由原理？两种实现方式有什么区别？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">示例图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#React%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">3.1.</span> <span class="nav-text">React生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6-1"><span class="nav-number">3.2.</span> <span class="nav-text">React事件机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reselect"><span class="nav-number">4.1.</span> <span class="nav-text">Reselect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6-2"><span class="nav-number">4.2.</span> <span class="nav-text">React事件机制</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Hu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Hu</p>
+  <div class="site-description" itemprop="description">记录个人学习过程中整理的相关资料，持续建设中......</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/huhaiqing106" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;huhaiqing106" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:huhaiqing110@gmail.com" title="E-Mail → mailto:huhaiqing110@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/wo-shi-zhi-hu-da-shen" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;wo-shi-zhi-hu-da-shen" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/360295545966717" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;360295545966717" rel="noopener" target="_blank"><i class="fas fa-blog fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/images/wechat_channel.jpg" title="WeChat → &#x2F;images&#x2F;wechat_channel.jpg"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner page posts-expand">
+  
+
+      
+
+        
+        <ul class="sub-menu menu">
+          
+            
+          
+          
+              
+  <li class="menu-item menu-item-javascript基础"><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/" rel="section">JavaScript基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-html和css"><a href="/%E8%B5%84%E6%96%99/HTML%E5%92%8CCSS/" rel="section">HTML和CSS</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-计算机基础"><a href="/%E8%B5%84%E6%96%99/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="section">计算机基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-数据结构和算法"><a href="/%E8%B5%84%E6%96%99/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" rel="section">数据结构和算法</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-运行环境"><a href="/%E8%B5%84%E6%96%99/%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83/" rel="section">运行环境</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-框架和类库"><a href="/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/" rel="section">框架和类库</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-前端工程"><a href="/%E8%B5%84%E6%96%99/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B/" rel="section">前端工程</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-项目与业务"><a href="/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/" rel="section">项目与业务</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-学习提升"><a href="/%E8%B5%84%E6%96%99/%E5%AD%A6%E4%B9%A0%E6%8F%90%E5%8D%87/" rel="section">学习提升</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-技术之外"><a href="/%E8%B5%84%E6%96%99/%E6%8A%80%E6%9C%AF%E4%B9%8B%E5%A4%96/" rel="section">技术之外</a></li>
+
+
+          
+        </ul>
+        
+
+        
+        
+      
+  
+
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/">框架和类库</a></li>
+          <li>REACT</li>
+        
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      <div class="post-body">
+          <h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><ul>
+<li>immutable </li>
+<li>shouldComponetUpdate</li>
+</ul>
+<h3 id="组件通信"><a href="#组件通信" class="headerlink" title="组件通信"></a>组件通信</h3><ul>
+<li>父子组件通信（props）</li>
+<li>兄弟组件通信（通过父组件进行状态管理，A调用父组件修改，父组件通知B）</li>
+<li>跨多层级组件通信（ Context API）</li>
+<li>任意组件（Redux/Event Bus）</li>
+</ul>
+<h3 id="Virtual-DOM"><a href="#Virtual-DOM" class="headerlink" title="Virtual DOM"></a>Virtual DOM</h3><ul>
+<li><p>判断差异</p>
+<ul>
+<li>首先从上到下，从左往右遍历对象，就是DOM多叉树的深度遍历，这一步会给每个节点添加索引，便于最后渲染差异</li>
+<li>一旦节点有子元素，就判断子元素是否有不同</li>
+</ul>
+</li>
+<li><p>优势</p>
+<ul>
+<li>将 Virtual DOM 作为一个兼容层，让我们还能对接非 Web 端的系统，实现跨端开发。</li>
+<li>通过 Virtual DOM 我们可以渲染到其他的平台，比如实现 SSR、同构渲染等等。</li>
+<li>实现组件的高度抽象化</li>
+</ul>
+</li>
+</ul>
+<h3 id="路由原理"><a href="#路由原理" class="headerlink" title="路由原理"></a>路由原理</h3><ul>
+<li><p>两种模式</p>
+<ul>
+<li><p>Hash 模式</p>
+<ul>
+<li>当#号后面的哈希值发生变化，可以通过hashChange监听URL的变化</li>
+</ul>
+</li>
+<li><p>History 模式</p>
+<ul>
+<li>HTML5推出的新功能，主要使用 history.pushState 和 history.replaceState 改变 URL</li>
+<li>点击后退按钮时触发popState事件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>两种模式对比</p>
+<ul>
+<li>Hash模式只能更改#后面的内容，History模式可以通过API设置任意同源的URL</li>
+<li>History 模式可以通过 API 添加任意类型的数据到历史记录中，Hash 模式只能更改哈希值，也就是字符串</li>
+<li>Hash 模式无需后端配置，并且兼容性好。History 模式在用户手动输入地址或者刷新页面的时候会发起 URL 请求，后端需要配置 index.html 页面用于匹配不到静态资源的时候</li>
+</ul>
+</li>
+</ul>
+<h3 id="Vue与React之间的区别"><a href="#Vue与React之间的区别" class="headerlink" title="Vue与React之间的区别"></a>Vue与React之间的区别</h3><ul>
+<li>Vue支持v-model，v-mode是语法糖跟React写表单的方式区别不大</li>
+<li>修改数据方式不同，Vue直接赋值，React用setState修改状态。Vue底层用了依赖追踪，页面渲染已经使最优的，React还需要用户手动去优化</li>
+<li>React需要使用JSX，有一定上手成本，并且需要整套工具链支持；Vue使用模板语法，没JSX灵活，但可以摆脱工具链，通过直接编写render函数就可以在游览器运行</li>
+<li>Vue定位就是降低前端开发的门槛，React更多的是去改变用户接受它的概念和思想，相比Vue上手成本略高</li>
+<li>生态上，React用户比Vue多</li>
+</ul>
+<h3 id="React事件机制"><a href="#React事件机制" class="headerlink" title="React事件机制"></a>React事件机制</h3><ul>
+<li><p>合成事件概念</p>
+<ul>
+<li><p>React中，我们绑定的onClick，onChange等事件，并不是原生的事件，而是由原生事件合成的React事件，比如：click事件合成为onClick事件，blur、change、focus、input、keydown等合成onChange事件</p>
+</li>
+<li><p>优势</p>
+<ul>
+<li>跨游览器兼容</li>
+<li>统一管理，React可以在组件卸载时，移除其上的绑定事件，优化内存</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>React事件系统</p>
+<ul>
+<li><p>事件注册</p>
+<p>  1、namesToPlugins</p>
+<ul>
+<li>事件名称与事件模块插件的映射</li>
+</ul>
+<p>  2、plugins</p>
+<ul>
+<li>namesToPlugins 注册的所有插件列表</li>
+</ul>
+<p>  3、registrationNameModules</p>
+<ul>
+<li>React合成事件与React处理事件插件 映射关系</li>
+</ul>
+<p>  4、registrationNameDependencies</p>
+<ul>
+<li>React合成事件与原声事件 映射关系</li>
+</ul>
+</li>
+<li><p>事件绑定</p>
+<p>1、diffProperties 处理React合成事件 HostComponent=5（dom元素）类型的fiber</p>
+<p>2、legacyListenToEvent 注册事件监听器</p>
+<ul>
+<li>找到React合成事件对应的原生事件集合</li>
+<li>legacyTrapBubbledEvent 绑定真正的dom事件</li>
+</ul>
+<p>3、绑定dispatchEvent，进行事件监听</p>
+<ul>
+<li>调用addTrappedEventListener进行真正的事件绑定，绑定在document上，dispatchEvent为统一的事件执行函数</li>
+</ul>
+</li>
+<li><p>事件触发</p>
+<p>  1、执行dispathEvent函数</p>
+<p>  2、legacy 事件处理系统与批量更新</p>
+<ul>
+<li>React在初始化dom时，用随机的key internalInstanceKey 指向了当前dom的fiber对象，fiber对象用stateNode指向当前的dmo元素</li>
+</ul>
+<p>  3、执行插件的extractEvents 形成事件对象event和事件处理函数队列</p>
+<p>  4、触发事件处理函数，释放事件池</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="试题"><a href="#试题" class="headerlink" title="试题"></a>试题</h2><h3 id="什么是-Virtual-DOM？为什么-Virtual-DOM-比原生-DOM-快？"><a href="#什么是-Virtual-DOM？为什么-Virtual-DOM-比原生-DOM-快？" class="headerlink" title="什么是 Virtual DOM？为什么 Virtual DOM 比原生 DOM 快？"></a>什么是 Virtual DOM？为什么 Virtual DOM 比原生 DOM 快？</h3><p>1、JS对象来模拟DOM<br>2、分场景，</p>
+<ol>
+<li>如果无脑替换所有DOM节点这种场景，Virtual DOM 的局部更新占优。</li>
+<li>如果局部替换DOM，那Virtual DOM 没有直接操作DOM快，毕竟还有一层算法损耗</li>
+</ol>
+<h3 id="前端路由原理？两种实现方式有什么区别？"><a href="#前端路由原理？两种实现方式有什么区别？" class="headerlink" title="前端路由原理？两种实现方式有什么区别？"></a>前端路由原理？两种实现方式有什么区别？</h3><p>1、通过监听URL的变化，然后匹配路由规则，显示相应的界面，并且无须刷新界面。<br>2、参考知识点</p>
+<h2 id="示例图"><a href="#示例图" class="headerlink" title="示例图"></a>示例图</h2><h3 id="React生命周期"><a href="#React生命周期" class="headerlink" title="React生命周期"></a>React生命周期</h3><p><img src="index/621bc885fc65487d527bddc00e580b7ff646a1046ab66aa135b23a08891f9055.png" alt="621bc885fc65487d527bddc00e580b7ff646a1046ab66aa135b23a08891f9055"></p>
+<h3 id="React事件机制-1"><a href="#React事件机制-1" class="headerlink" title="React事件机制"></a>React事件机制</h3><p><img src="index/56bda40d467abf56e7b5de9bfe9ce70e810c1fc768308b229d690e717161ac17.png" alt="56bda40d467abf56e7b5de9bfe9ce70e810c1fc768308b229d690e717161ac17"></p>
+<ul>
+<li>事件插件结构/SimpleEventPlugin</li>
+</ul>
+<p><img src="index/227323e21ce452ed6dcb0e7f9248c3d97f855f191b055e4c3912170eb9b51f92.png" alt="227323e21ce452ed6dcb0e7f9248c3d97f855f191b055e4c3912170eb9b51f92"></p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="Reselect"><a href="#Reselect" class="headerlink" title="Reselect"></a>Reselect</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6e38c66366cd">https://www.jianshu.com/p/6e38c66366cd</a></p>
+<h3 id="React事件机制-2"><a href="#React事件机制-2" class="headerlink" title="React事件机制"></a>React事件机制</h3><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6955636911214067720#heading-14">https://juejin.cn/post/6955636911214067720#heading-14</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6909271104440205326">https://juejin.cn/post/6909271104440205326</a></p>
+
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/">框架和类库</a></li>
+          <li>REACT</li>
+        
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">33</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

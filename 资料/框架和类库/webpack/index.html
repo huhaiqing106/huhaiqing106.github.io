@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+  <meta name="description" content="知识点module，chunk 和 bundle 的区别 module，chunk 和 bundle 其实就是同一份逻辑代码在不同转换场景下的取了三个名字：我们直接写出来的是 module，webpack 处理时是 chunk，最后生成浏览器可以直接运行的 bundle。  filename 和 chunkFilename 的区别 filename 指列在 entry 中，打包后输出的文件的名称。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Phil&#39;s Blog">
+<meta property="og:url" content="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/webpack/index.html">
+<meta property="og:site_name" content="Phil&#39;s Blog">
+<meta property="og:description" content="知识点module，chunk 和 bundle 的区别 module，chunk 和 bundle 其实就是同一份逻辑代码在不同转换场景下的取了三个名字：我们直接写出来的是 module，webpack 处理时是 chunk，最后生成浏览器可以直接运行的 bundle。  filename 和 chunkFilename 的区别 filename 指列在 entry 中，打包后输出的文件的名称。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-15T07:04:08.616Z">
+<meta property="article:modified_time" content="2022-02-15T07:04:08.616Z">
+<meta property="article:author" content="Hu">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/webpack/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/webpack/index.html","path":"资料/框架和类库/webpack/index.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Phil's Blog
+</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Phil's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Hello,word.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        
+            
+  <li class="menu-item menu-item-资料"><a href="/%E8%B5%84%E6%96%99/" rel="section"><i class="fa fa-th fa-fw"></i>资料</a></li>
+
+
+      
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#module%EF%BC%8Cchunk-%E5%92%8C-bundle-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">module，chunk 和 bundle 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filename-%E5%92%8C-chunkFilename-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text">filename 和 chunkFilename 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpackPrefetch%E3%80%81webpackPreload-%E5%92%8C-webpackChunkName%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">webpackPrefetch、webpackPreload 和 webpackChunkName的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash%E3%80%81chunkhash%E3%80%81contenthash-%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C"><span class="nav-number">1.4.</span> <span class="nav-text">hash、chunkhash、contenthash 有什么不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sourse-map-%E4%B8%AD-eval%E3%80%81cheap%E3%80%81inline-%E5%92%8C-module-%E5%90%84%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D"><span class="nav-number">1.5.</span> <span class="nav-text">sourse-map 中 eval、cheap、inline 和 module 各是什么意思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack%E6%89%93%E5%8C%85%E4%BC%98%E5%8C%96"><span class="nav-number">1.6.</span> <span class="nav-text">webpack打包优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">试题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F%E5%8F%AF%E4%BB%A5%E5%87%8F%E5%B0%91-Webpack-%E7%9A%84%E6%89%93%E5%8C%85%E6%97%B6%E9%97%B4"><span class="nav-number">2.1.</span> <span class="nav-text">有哪些方式可以减少 Webpack 的打包时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F%E5%8F%AF%E4%BB%A5%E8%AE%A9-Webpack-%E6%89%93%E5%87%BA%E6%9D%A5%E7%9A%84%E5%8C%85%E6%9B%B4%E5%B0%8F"><span class="nav-number">2.2.</span> <span class="nav-text">有哪些方式可以让 Webpack 打出来的包更小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loader%E5%92%8Cplugin%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">loader和plugin的区别是什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">扩展链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Hu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Hu</p>
+  <div class="site-description" itemprop="description">记录个人学习过程中整理的相关资料，持续建设中......</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/huhaiqing106" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;huhaiqing106" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:huhaiqing110@gmail.com" title="E-Mail → mailto:huhaiqing110@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/wo-shi-zhi-hu-da-shen" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;wo-shi-zhi-hu-da-shen" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/360295545966717" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;360295545966717" rel="noopener" target="_blank"><i class="fas fa-blog fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/images/wechat_channel.jpg" title="WeChat → &#x2F;images&#x2F;wechat_channel.jpg"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner page posts-expand">
+  
+
+      
+
+        
+        <ul class="sub-menu menu">
+          
+            
+          
+          
+              
+  <li class="menu-item menu-item-javascript基础"><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/" rel="section">JavaScript基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-html和css"><a href="/%E8%B5%84%E6%96%99/HTML%E5%92%8CCSS/" rel="section">HTML和CSS</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-计算机基础"><a href="/%E8%B5%84%E6%96%99/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="section">计算机基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-数据结构和算法"><a href="/%E8%B5%84%E6%96%99/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" rel="section">数据结构和算法</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-运行环境"><a href="/%E8%B5%84%E6%96%99/%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83/" rel="section">运行环境</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-框架和类库"><a href="/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/" rel="section">框架和类库</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-前端工程"><a href="/%E8%B5%84%E6%96%99/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B/" rel="section">前端工程</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-项目与业务"><a href="/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/" rel="section">项目与业务</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-学习提升"><a href="/%E8%B5%84%E6%96%99/%E5%AD%A6%E4%B9%A0%E6%8F%90%E5%8D%87/" rel="section">学习提升</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-技术之外"><a href="/%E8%B5%84%E6%96%99/%E6%8A%80%E6%9C%AF%E4%B9%8B%E5%A4%96/" rel="section">技术之外</a></li>
+
+
+          
+        </ul>
+        
+
+        
+        
+      
+  
+
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/">框架和类库</a></li>
+          <li>WEBPACK</li>
+        
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      <div class="post-body">
+          <h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="module，chunk-和-bundle-的区别"><a href="#module，chunk-和-bundle-的区别" class="headerlink" title="module，chunk 和 bundle 的区别"></a>module，chunk 和 bundle 的区别</h3><ul>
+<li>module，chunk 和 bundle 其实就是同一份逻辑代码在不同转换场景下的取了三个名字：我们直接写出来的是 module，webpack 处理时是 chunk，最后生成浏览器可以直接运行的 bundle。</li>
+</ul>
+<h3 id="filename-和-chunkFilename-的区别"><a href="#filename-和-chunkFilename-的区别" class="headerlink" title="filename 和 chunkFilename 的区别"></a>filename 和 chunkFilename 的区别</h3><ul>
+<li>filename 指列在 entry 中，打包后输出的文件的名称。</li>
+<li>chunkFilename 指未列在 entry 中，却又需要被打包出来的文件的名称。</li>
+</ul>
+<h3 id="webpackPrefetch、webpackPreload-和-webpackChunkName的作用"><a href="#webpackPrefetch、webpackPreload-和-webpackChunkName的作用" class="headerlink" title="webpackPrefetch、webpackPreload 和 webpackChunkName的作用"></a>webpackPrefetch、webpackPreload 和 webpackChunkName的作用</h3><ul>
+<li>preload chunk 会在父 chunk 加载时，以并行方式开始加载。prefetch chunk 会在父 chunk 加载结束后开始加载。</li>
+<li>preload chunk 具有中等优先级，并立即下载。prefetch chunk 在浏览器闲置时下载。</li>
+<li>preload chunk 会在父 chunk 中立即请求，用于当下时刻。prefetch chunk 会用于未来的某个时刻</li>
+<li>webpackChunkName 是为预加载的文件取别名，webpackPrefetch 会在浏览器闲置下载文件，webpackPreload 会在父 chunk 加载时并行下载文件。</li>
+</ul>
+<h3 id="hash、chunkhash、contenthash-有什么不同"><a href="#hash、chunkhash、contenthash-有什么不同" class="headerlink" title="hash、chunkhash、contenthash 有什么不同"></a>hash、chunkhash、contenthash 有什么不同</h3><ul>
+<li>hash 计算与整个项目的构建相关；</li>
+<li>chunkhash 计算与同一 chunk 内容相关；</li>
+<li>contenthash 计算与文件内容本身相关。</li>
+</ul>
+<h3 id="sourse-map-中-eval、cheap、inline-和-module-各是什么意思"><a href="#sourse-map-中-eval、cheap、inline-和-module-各是什么意思" class="headerlink" title="sourse-map 中 eval、cheap、inline 和 module 各是什么意思"></a>sourse-map 中 eval、cheap、inline 和 module 各是什么意思</h3><ul>
+<li>source-map—大而全，啥都有，就因为啥都有可能会让 webpack 构建时间变长，看情况使用。</li>
+<li>cheap-module-eval-source-map—这个一般是开发环境（dev）推荐使用，在构建速度报错提醒上做了比较好的均衡。</li>
+<li>cheap-module-source-map—一般来说，生产环境是不配 source-map 的，如果想捕捉线上的代码报错，我们可以用这个</li>
+</ul>
+<h3 id="webpack打包优化"><a href="#webpack打包优化" class="headerlink" title="webpack打包优化"></a>webpack打包优化</h3><ul>
+<li><p>减少打包时间</p>
+<ul>
+<li><p>优化loader</p>
+<ul>
+<li><p>优化loader的文件搜索范围</p>
+</li>
+<li><p>babel缓存已编译文件</p>
+<p>loader: ‘babel-loader?cacheDirectory=true’</p>
+</li>
+</ul>
+</li>
+<li><p>HappyPack</p>
+<ul>
+<li>将loader的同步执行转换为并行</li>
+</ul>
+</li>
+<li><p>DllPlugin</p>
+<ul>
+<li>可以将特定的类库提前打包然后引入</li>
+</ul>
+</li>
+<li><p>代码压缩</p>
+<ul>
+<li>UglifyJS</li>
+</ul>
+</li>
+<li><p>其他小优化点</p>
+<ul>
+<li><p>resolve.extensions</p>
+<p>文件名后缀，默认查找顺序[“.js”,”.json”]，如果导入文件无后缀就按这个顺序查找。应尽量减少后缀列表长度，出现频率高的防前面。</p>
+</li>
+<li><p>resolve.alias</p>
+<p>别名映射路径，可以让webpack快速找到文件路径</p>
+</li>
+<li><p>module.noParse</p>
+<p>一个文件没有其他依赖，使用该属性让webpack不扫描该文件</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>减少打包体积</p>
+<ul>
+<li><p>按需加载</p>
+</li>
+<li><p>Scope Hoisting</p>
+<p>Scope Hoisting 会分析出模块之间的依赖关系，尽可能的把打包出来的模块合并到一个函数中去</p>
+</li>
+<li><p>Tree Shaking</p>
+<p>Tree Shaking 可以实现删除项目中未被引用的代码</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="试题"><a href="#试题" class="headerlink" title="试题"></a>试题</h2><h3 id="有哪些方式可以减少-Webpack-的打包时间"><a href="#有哪些方式可以减少-Webpack-的打包时间" class="headerlink" title="有哪些方式可以减少 Webpack 的打包时间"></a>有哪些方式可以减少 Webpack 的打包时间</h3><p>知识点：webpack打包优化（减少打包时间）</p>
+<h3 id="有哪些方式可以让-Webpack-打出来的包更小"><a href="#有哪些方式可以让-Webpack-打出来的包更小" class="headerlink" title="有哪些方式可以让 Webpack 打出来的包更小"></a>有哪些方式可以让 Webpack 打出来的包更小</h3><p>知识点：webpack打包优化（减少打包体积）</p>
+<h3 id="loader和plugin的区别是什么？"><a href="#loader和plugin的区别是什么？" class="headerlink" title="loader和plugin的区别是什么？"></a>loader和plugin的区别是什么？</h3><ul>
+<li><p>loader，它是一个转换器，将A文件进行编译成B文件，比如：将A.less转换为A.css，单纯的文件转换过程。</p>
+</li>
+<li><p>plugin是一个扩展器，它丰富了webpack本身，针对是loader结束后，webpack打包的整个过程，它并不直接操作文件，而是基于事件机制工作，会监听webpack打包过程中的某些节点，执行广泛的任务</p>
+</li>
+</ul>
+<h2 id="扩展链接"><a href="#扩展链接" class="headerlink" title="扩展链接"></a>扩展链接</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/r5sRDx7GPlf4tanKv1L2Iw">https://mp.weixin.qq.com/s/r5sRDx7GPlf4tanKv1L2Iw</a></p>
+
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/">框架和类库</a></li>
+          <li>WEBPACK</li>
+        
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">33</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

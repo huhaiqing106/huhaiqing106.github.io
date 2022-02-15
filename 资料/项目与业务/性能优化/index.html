@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+  <meta name="description" content="知识点测试工具  Audit 工具获得网站的多个指标的性能报告 Performance 工具了解网站的性能瓶颈  Performance API 具体测量时间  V8引擎 Ignition &#x3D;&gt; Bytecode  TurboFan &#x3D;&gt; Machine Code 执行效率优于Bytecode  Lazy-Compile  函数没执行前会先预解析，到执行才会被解析编译 可以通过把函数添">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Phil&#39;s Blog">
+<meta property="og:url" content="http://example.com/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="Phil&#39;s Blog">
+<meta property="og:description" content="知识点测试工具  Audit 工具获得网站的多个指标的性能报告 Performance 工具了解网站的性能瓶颈  Performance API 具体测量时间  V8引擎 Ignition &#x3D;&gt; Bytecode  TurboFan &#x3D;&gt; Machine Code 执行效率优于Bytecode  Lazy-Compile  函数没执行前会先预解析，到执行才会被解析编译 可以通过把函数添">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index/a2e21209d4dd0e4f7ab8d2358522bf85d62c92f7729a299fa71b98c13eac68ee.png">
+<meta property="og:image" content="http://example.com/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index/30662b311745d6c503b781e747d6e8c1a02ccdc7530f673a67b860473835ce8b.png">
+<meta property="og:image" content="http://example.com/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index/9494ea29fadaa93bc91f4778a570efb9d6bd3ec84219f90d403292620396776f.png">
+<meta property="article:published_time" content="2022-02-15T07:19:38.497Z">
+<meta property="article:modified_time" content="2022-02-15T07:19:38.497Z">
+<meta property="article:author" content="Hu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index/a2e21209d4dd0e4f7ab8d2358522bf85d62c92f7729a299fa71b98c13eac68ee.png">
+
+
+<link rel="canonical" href="http://example.com/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html","path":"资料/项目与业务/性能优化/index.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Phil's Blog
+</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Phil's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Hello,word.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        
+            
+  <li class="menu-item menu-item-资料"><a href="/%E8%B5%84%E6%96%99/" rel="section"><i class="fa fa-th fa-fw"></i>资料</a></li>
+
+
+      
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.</span> <span class="nav-text">测试工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#V8%E5%BC%95%E6%93%8E"><span class="nav-number">1.2.</span> <span class="nav-text">V8引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A2%8E%E7%89%87%E5%8C%96%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">碎片化优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%95%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">示例图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#V8%E5%BC%95%E6%93%8E-1"><span class="nav-number">3.1.</span> <span class="nav-text">V8引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%82%E6%B5%81"><span class="nav-number">3.2.</span> <span class="nav-text">节流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E6%8A%96"><span class="nav-number">3.3.</span> <span class="nav-text">防抖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E9%93%BE%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">扩展链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Hu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Hu</p>
+  <div class="site-description" itemprop="description">记录个人学习过程中整理的相关资料，持续建设中......</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/huhaiqing106" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;huhaiqing106" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:huhaiqing110@gmail.com" title="E-Mail → mailto:huhaiqing110@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/wo-shi-zhi-hu-da-shen" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;wo-shi-zhi-hu-da-shen" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/360295545966717" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;360295545966717" rel="noopener" target="_blank"><i class="fas fa-blog fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/images/wechat_channel.jpg" title="WeChat → &#x2F;images&#x2F;wechat_channel.jpg"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner page posts-expand">
+  
+
+      
+
+        
+        <ul class="sub-menu menu">
+          
+            
+          
+          
+              
+  <li class="menu-item menu-item-javascript基础"><a href="/%E8%B5%84%E6%96%99/JavaScript%E5%9F%BA%E7%A1%80/" rel="section">JavaScript基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-html和css"><a href="/%E8%B5%84%E6%96%99/HTML%E5%92%8CCSS/" rel="section">HTML和CSS</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-计算机基础"><a href="/%E8%B5%84%E6%96%99/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="section">计算机基础</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-数据结构和算法"><a href="/%E8%B5%84%E6%96%99/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" rel="section">数据结构和算法</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-运行环境"><a href="/%E8%B5%84%E6%96%99/%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83/" rel="section">运行环境</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-框架和类库"><a href="/%E8%B5%84%E6%96%99/%E6%A1%86%E6%9E%B6%E5%92%8C%E7%B1%BB%E5%BA%93/" rel="section">框架和类库</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-前端工程"><a href="/%E8%B5%84%E6%96%99/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B/" rel="section">前端工程</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-项目与业务"><a href="/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/" rel="section">项目与业务</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-学习提升"><a href="/%E8%B5%84%E6%96%99/%E5%AD%A6%E4%B9%A0%E6%8F%90%E5%8D%87/" rel="section">学习提升</a></li>
+
+
+          
+          
+              
+  <li class="menu-item menu-item-技术之外"><a href="/%E8%B5%84%E6%96%99/%E6%8A%80%E6%9C%AF%E4%B9%8B%E5%A4%96/" rel="section">技术之外</a></li>
+
+
+          
+        </ul>
+        
+
+        
+        
+      
+  
+
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/">项目与业务</a></li>
+          <li>性能优化</li>
+        
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      <div class="post-body">
+          <h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="测试工具"><a href="#测试工具" class="headerlink" title="测试工具"></a>测试工具</h3><ul>
+<li> Audit 工具获得网站的多个指标的性能报告</li>
+<li>Performance 工具了解网站的性能瓶颈</li>
+<li> Performance API 具体测量时间</li>
+</ul>
+<h3 id="V8引擎"><a href="#V8引擎" class="headerlink" title="V8引擎"></a>V8引擎</h3><ul>
+<li><p>Ignition =&gt; Bytecode</p>
+</li>
+<li><p>TurboFan =&gt; Machine Code</p>
+<p>执行效率优于Bytecode</p>
+</li>
+<li><p>Lazy-Compile</p>
+<ul>
+<li>函数没执行前会先预解析，到执行才会被解析编译</li>
+<li>可以通过把函数添加到括号中解决预解析</li>
+</ul>
+</li>
+<li><p>优化策略</p>
+<ul>
+<li>采用减少代码文件的大小或者减少书写嵌套函数的方式减少编译时间</li>
+<li>我们应该尽可能保证传入参数的类型一致，让V8优化代码</li>
+</ul>
+</li>
+</ul>
+<h3 id="碎片化优化"><a href="#碎片化优化" class="headerlink" title="碎片化优化"></a>碎片化优化</h3><ul>
+<li><p>图片优化</p>
+<ul>
+<li>减少像素点</li>
+<li>减少每个像素点能够显示的颜色</li>
+</ul>
+</li>
+<li><p>图片加载优化</p>
+<ul>
+<li>不用图片，修饰图片尽量用CSS替代</li>
+<li>移动端，计算出适配屏的高度，再请求CDN对应裁剪好的图片</li>
+<li>小图用base64格式</li>
+<li>多图合并到一张（雪碧图）</li>
+<li>选择正确的图片格式<ul>
+<li>能显示webP格式的游览器用webP格式，因为更好的图像数据压缩算法、更小的体积，但兼容性不好</li>
+<li>小图用PNG，尽量SVG</li>
+<li>照片用JEPG</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>DNS预解析</p>
+   <link rel="dns-prefetch" href="//yuchengkai.cn"></li>
+<li><p>节流</p>
+<p>   滚动场景；不需要滚动过程中一直发起请求</p>
+</li>
+<li><p>防抖</p>
+<p>   重复点击场景；当用户点击一段时间后，没有再次点击就发起请求</p>
+</li>
+<li><p>预加载</p>
+<p>   不会阻塞onload事件</p>
+<p>   ​    <link rel="preload" href="http://example.com"></p>
+</li>
+<li><p>预渲染</p>
+   <link rel="prerender" href="http://example.com"> </li>
+<li><p>懒执行</p>
+<p>   将某些逻辑延迟到使用时再计算</p>
+</li>
+<li><p>懒加载</p>
+<p>   将不关键的资源延后加载</p>
+</li>
+<li><p>CDN</p>
+<p>   获取远程服务器的缓存数据</p>
+</li>
+</ul>
+<h2 id="试题"><a href="#试题" class="headerlink" title="试题"></a>试题</h2><h2 id="示例图"><a href="#示例图" class="headerlink" title="示例图"></a>示例图</h2><h3 id="V8引擎-1"><a href="#V8引擎-1" class="headerlink" title="V8引擎"></a>V8引擎</h3><p><img src="index/a2e21209d4dd0e4f7ab8d2358522bf85d62c92f7729a299fa71b98c13eac68ee.png" alt="a2e21209d4dd0e4f7ab8d2358522bf85d62c92f7729a299fa71b98c13eac68ee"></p>
+<h3 id="节流"><a href="#节流" class="headerlink" title="节流"></a>节流</h3><p><img src="index/30662b311745d6c503b781e747d6e8c1a02ccdc7530f673a67b860473835ce8b.png" alt="30662b311745d6c503b781e747d6e8c1a02ccdc7530f673a67b860473835ce8b"></p>
+<h3 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h3><p><img src="index/9494ea29fadaa93bc91f4778a570efb9d6bd3ec84219f90d403292620396776f.png" alt="9494ea29fadaa93bc91f4778a570efb9d6bd3ec84219f90d403292620396776f"></p>
+<h2 id="扩展链接"><a href="#扩展链接" class="headerlink" title="扩展链接"></a>扩展链接</h2><p><a target="_blank" rel="noopener" href="https://juejin.im/book/5b936540f265da0a9624b04b?referrer=574f8d8d2e958a005fd4edac">https://juejin.im/book/5b936540f265da0a9624b04b?referrer=574f8d8d2e958a005fd4edac</a></p>
+
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/%E8%B5%84%E6%96%99/">资料</a></li>
+            <li><a href="/%E8%B5%84%E6%96%99/%E9%A1%B9%E7%9B%AE%E4%B8%8E%E4%B8%9A%E5%8A%A1/">项目与业务</a></li>
+          <li>性能优化</li>
+        
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">33</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

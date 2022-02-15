@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+  <meta name="description" content="前言继上一篇文章之后，我们可以基于写的脚手架工程初始化一个项目工程，然后基于这个工程提交搞Gitea服务，实现基于Jenkins的自动化部署与Gitea的webhook钩子，以便在执行git push的时候，自动构建项目。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="前端项目搭建部署全流程（五）：基于Jenkins与gitea的自动化部署">
+<meta property="og:url" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="Phil&#39;s Blog">
+<meta property="og:description" content="前言继上一篇文章之后，我们可以基于写的脚手架工程初始化一个项目工程，然后基于这个工程提交搞Gitea服务，实现基于Jenkins的自动化部署与Gitea的webhook钩子，以便在执行git push的时候，自动构建项目。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145222750.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145243128.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210219171352383.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144211126.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144726376.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144854454.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144956478.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145046670.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145109574.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145140041.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151139521.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151245037.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151331943.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220163026980.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151541527.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151736268.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152008079.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152215119.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152319792.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152042232.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152548405.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152652538.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152726792.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153101464.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153213842.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151245037.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153335932.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153606446.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220155611875.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220155634804.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220160716304.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161030935.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161059664.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161125789.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161407281.png">
+<meta property="og:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161453744.png">
+<meta property="article:published_time" content="2022-02-15T07:39:41.000Z">
+<meta property="article:modified_time" content="2022-02-15T08:46:51.595Z">
+<meta property="article:author" content="Hu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145222750.png">
+
+
+<link rel="canonical" href="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/","path":"2022/02/15/前端项目搭建部署全流程（五）：基于Jenkins与gitea的自动化部署/","title":"前端项目搭建部署全流程（五）：基于Jenkins与gitea的自动化部署"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>前端项目搭建部署全流程（五）：基于Jenkins与gitea的自动化部署 | Phil's Blog</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Phil's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Hello,word.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        
+            
+  <li class="menu-item menu-item-资料"><a href="/%E8%B5%84%E6%96%99/" rel="section"><i class="fa fa-th fa-fw"></i>资料</a></li>
+
+
+      
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BAGitea%E6%89%98%E7%AE%A1%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">搭建Gitea托管服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEJenkins"><span class="nav-number">3.</span> <span class="nav-text">配置Jenkins</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85JDK"><span class="nav-number">3.1.</span> <span class="nav-text">安装JDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0%E9%9D%99%E6%80%81node%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">3.2.</span> <span class="nav-text">创建本地静态node服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%9E%84%E5%BB%BA%E4%B8%8E%E9%83%A8%E7%BD%B2"><span class="nav-number">3.3.</span> <span class="nav-text">自动构建与部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-pipeline-%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.4.</span> <span class="nav-text">使用 pipeline 构建项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Hu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Hu</p>
+  <div class="site-description" itemprop="description">记录个人学习过程中整理的相关资料，持续建设中......</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/huhaiqing106" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;huhaiqing106" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:huhaiqing110@gmail.com" title="E-Mail → mailto:huhaiqing110@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/wo-shi-zhi-hu-da-shen" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;wo-shi-zhi-hu-da-shen" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/360295545966717" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;360295545966717" rel="noopener" target="_blank"><i class="fas fa-blog fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/images/wechat_channel.jpg" title="WeChat → &#x2F;images&#x2F;wechat_channel.jpg"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Hu">
+      <meta itemprop="description" content="记录个人学习过程中整理的相关资料，持续建设中......">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Phil's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端项目搭建部署全流程（五）：基于Jenkins与gitea的自动化部署
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-02-15 15:39:41 / 修改时间：16:46:51" itemprop="dateCreated datePublished" datetime="2022-02-15T15:39:41+08:00">2022-02-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>继<a href="">上一篇文章</a>之后，我们可以基于写的脚手架工程初始化一个项目工程，然后基于这个工程提交搞Gitea服务，实现基于Jenkins的自动化部署与Gitea的webhook钩子，以便在执行<code>git push</code>的时候，自动构建项目。 </p>
+<span id="more"></span>
+
+<h2 id="搭建Gitea托管服务器"><a href="#搭建Gitea托管服务器" class="headerlink" title="搭建Gitea托管服务器"></a>搭建Gitea托管服务器</h2><ol>
+<li><p>下载Gitea安装文件<a target="_blank" rel="noopener" href="https://dl.gitea.io/gitea%EF%BC%8C%E6%88%91%E4%B8%8B%E8%BD%BD%E7%9A%84%E6%98%AF%60gitea-1.13.1-windows-4.0-amd64.exe%60%E7%89%88%E6%9C%AC">https://dl.gitea.io/gitea，我下载的是`gitea-1.13.1-windows-4.0-amd64.exe`版本</a></p>
+</li>
+<li><p>下载完成后，在本地磁盘建立一个Gitea目录，然后在该目录下执行安装文件</p>
+</li>
+<li><p>然后打开<code>localhost:3000</code>就可以看到运行知道的Gitea</p>
+</li>
+<li><p>点击注册，第一次会弹出一个初始配置页面，数据库选择 <code>SQLite3</code>，另外把 <code>localhost</code> 改成你电脑的局域网地址，例如我的电脑 IP 为 <code>192.168.0.118</code></p>
+<p><em>PS：<code>localhost</code>改<code>IP</code>这步我自己没有改，这个是借用网上一位大神的图。</em></p>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145222750.png" class="">
+
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145243128.png" class=""></li>
+<li><p>填完这些信息后，点击立即安装，等待一会，完成配置</p>
+</li>
+<li><p>继续点击注册用户，第一个注册的用户将会成会管理员</p>
+</li>
+<li><p>打开 Gitea 的安装目录，找到 <code>custom\conf\app.ini</code>，在里面加上一行代码 <code>START_SSH_SERVER = true</code>。这时就可以使用 ssh 进行 push 操作了</p>
+</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210219171352383.png" class="">
+
+<ol start="8">
+<li>如果使用 http 的方式无法克隆项目，请取消 git 代理</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">git config --global --<span class="built_in">unset</span> https.proxy</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h2><h3 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h3><p>JDK有版本要求，必须要1.8的，官网有说明，本人在这踩过坑</p>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144211126.png" class="">
+
+<ol>
+<li>下载Jenkins，Jenkins分exe的安装文件以及WAR包、Docker镜像分发，开始我是exe安装，安装完成之后一直没法进入<code>解锁Jenkins</code>这个页面，所以后来改成WAR包的形式，<a target="_blank" rel="noopener" href="https://www.jenkins.io/zh/download/">https://www.jenkins.io/zh/download/</a></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144726376.png" class="">
+
+<ol start="2">
+<li>安装过程中遇到 <code>Logon Type</code> 时，选择第一个</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144854454.png" class="">
+
+<ol start="3">
+<li>端口默认为 8080，这里我填的是 8000。安装完会自动打开 <code>http://localhost:8000</code> 网站</li>
+<li>按照提示找到对应的文件（直接复制路径在我的电脑中打开），其中有管理员密码</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220144956478.png" class="">
+
+<ol start="5">
+<li>安装插件，选择第一个</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145046670.png" class="">
+
+<ol start="6">
+<li>创建管理员用户，点击完成并保存，然后一路下一步</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145109574.png" class="">
+
+<ol start="7">
+<li>配置完成后自动进入首页，这时点击 <code>Manage Jenkins</code> -&gt; <code>Manage plugins</code> 安装插件</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220145140041.png" class="">
+
+<ol start="8">
+<li>点击 <code>可选插件</code>，输入 nodejs，搜索插件，然后安装</li>
+<li>安装完成后回到首页，点击 <code>Manage Jenkins</code> -&gt; <code>Global Tool Configuration</code> 配置 nodejs。如果你的电脑是 win7 的话，nodejs 版本最好不要太高，选择 v12 左右的就行</li>
+</ol>
+<h3 id="创建本地静态node服务器"><a href="#创建本地静态node服务器" class="headerlink" title="创建本地静态node服务器"></a>创建本地静态node服务器</h3><ol>
+<li>在本地磁盘创建一个发布目录，然后执行<code>npm init -y</code>，初始项目</li>
+<li>执行<code>npm i express</code>，下载express</li>
+<li>创建一个<code>server.js</code>文件，里面写入如下代码：</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app = express()</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3001</span></span><br><span class="line"></span><br><span class="line">app.use(express.static(<span class="string">&#x27;dist&#x27;</span>))</span><br><span class="line"></span><br><span class="line">app.listen(port, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`Example app listening at http://localhost:<span class="subst">$&#123;port&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>它将当前目录下的 <code>dist</code> 文件夹设为静态服务器资源目录，然后在当前目录下执行 <code>node server.js</code> 启动服务器。</p>
+<p>由于现在还没有<code>dist</code>目录，现在运行访问的是空页面</p>
+<h3 id="自动构建与部署"><a href="#自动构建与部署" class="headerlink" title="自动构建与部署"></a>自动构建与部署</h3><ol>
+<li>使用之前我们通过脚手架创建的demo项目，然后在你的Gitea新建一个创建，把内容克隆到进去，这里介绍如何将已有的项目克隆到GitHub中，<a target="_blank" rel="noopener" href="https://blog.csdn.net/north1989/article/details/53471439">https://blog.csdn.net/north1989/article/details/53471439</a></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151139521.png" class="">
+
+<ol start="2">
+<li>打开 Jenkins 首页，点击 <code>新建 Item</code> 创建项目</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151245037.png" class="">
+
+<ol start="3">
+<li>选择<code>源码管理</code>，输入你的 Gitea 上的仓库地址</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151331943.png" class="">
+
+<ol start="4">
+<li>也可以定时构建，我这设置的是8,12,15点构建，也可以不设置，手动构建</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220163026980.png" class="">
+
+<ol start="5">
+<li>然后选择构建环境，选择刚刚配置的插件nodejs</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151541527.png" class="">
+
+<ol start="6">
+<li>点击增加构建步骤，windows 要选 <code>execute windows batch command</code>，linux 要选 <code>execute shell</code></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151736268.png" class="">
+
+<ol start="7">
+<li>输入如下这行命令的作用是安装依赖，构建项目，并将构建后的静态资源复制到指定目录 <code>C:\tools\personal\github\JenkinsDeploy\dist\</code>。这个目录是静态服务器资源目录</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org/ &amp;&amp; npm i &amp;&amp; npm run build &amp;&amp; xcopy .\dist\* C:\tools\personal\github\JenkinsDeploy\dist\ /s/e/y</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152008079.png" class="">
+
+<ol start="8">
+<li>修改下之前脚手架创建的demo项目，增加build命令</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152215119.png" class="">
+
+<p><em>替换压缩的插件<code>UglifyjsPlugin</code>—&gt;<code>TerserPlugin</code></em></p>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152319792.png" class="">
+
+<ol start="9">
+<li>保存后，返回首页。点击项目旁边的小三角，选择 <code>build now</code></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152042232.png" class="">
+
+<ol start="10">
+<li>开始构建项目，可以点击进去查看构建过程</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152548405.png" class="">
+
+<ol start="11">
+<li>构建成功，打开之前搭建的静态node服务器地址<code>http://localhost:3001/</code></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152652538.png" class="">
+
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220152726792.png" class="">
+
+<h3 id="使用-pipeline-构建项目"><a href="#使用-pipeline-构建项目" class="headerlink" title="使用 pipeline 构建项目"></a>使用 pipeline 构建项目</h3><p>使用流水线构建项目可以结合 Gitea 的 <code>webhook</code> 钩子，以便在执行 <code>git push</code> 的时候，自动构建项目</p>
+<ol>
+<li>点击首页右上角的用户名，选择<code>设置</code></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153101464.png" class="">
+
+<p>2.添加新的token，记得将 token 保存起来。</p>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153213842.png" class="">
+
+<ol start="3">
+<li>打开 Jenkins 首页，点击 <code>新建 Item</code> 创建项目</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220151245037.png" class="">
+
+<ol start="4">
+<li>点击<code>构建触发器</code>，选择<code>触发远程构建</code>，填入刚才创建的 token</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153335932.png" class="">
+
+<ol start="5">
+<li>选择流水线，按照提示输入内容，然后点击<code>保存</code></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220153606446.png" class="">
+
+<ol start="6">
+<li> 如果是exe安装的话，找到<code>jenkins.xml</code> 文件，找到 <code>&lt;arguments&gt;</code> 标签，在里面加上 <code>-Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true</code>，如果是war包运行在java后面加上这句：</li>
+</ol>
+   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=<span class="literal">true</span> jenkins.war --httpPort=8000</span><br></pre></td></tr></table></figure>
+
+<p>   它的作用是关闭 <code>CSRF</code> 验证，不关的话，Gitea 的 <code>webhook</code> 会一直报 403 错误，无法使用。加好参数后，重启Jenkins</p>
+<ol start="7">
+<li>回到首页，配置全局安全选项。勾上<code>匿名用户具有可读权限</code>，再保存</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220155611875.png" class="">
+
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220155634804.png" class="">
+
+<ol start="8">
+<li>打开你的 Gitea 仓库页面，选择<code>仓库设置</code>，<code>管理web钩子</code>，<code>添加web钩子</code>，钩子选择<code>Gitea</code></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220160716304.png" class="">
+
+<ol start="9">
+<li>目标 URL 按照 Jenkins 的提示输入内容。然后点击<code>添加 web 钩子</code></li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161030935.png" class="">
+
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161059664.png" class="">
+
+<ol start="10">
+<li>点击创建好的 web 钩子，拉到下方，点击测试推送。不出意外，应该能看到推送成功的消息，此时回到 Jenkins 首页，发现已经在构建项目了</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161125789.png" class="">
+
+<ol start="11">
+<li>由于没有配置 <code>Jenkinsfile</code> 文件，此时构建是不会成功的。所以接下来需要配置一下 <code>Jenkinsfile</code> 文件。将以下代码复制到你 Gitea 项目下的 <code>Jenkinsfile</code> 文件。jenkins 在构建时会自动读取文件的内容执行构建及部署操作</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line">    stages &#123;</span><br><span class="line">        <span class="function"><span class="title">stage</span>(<span class="params"><span class="string">&#x27;Build&#x27;</span></span>)</span> &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">				bat <span class="string">&#x27;npm config set registry https://registry.npm.taobao.org/&#x27;</span></span><br><span class="line">                bat <span class="string">&#x27;npm i&#x27;</span></span><br><span class="line">                bat <span class="string">&#x27;npm run build&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="title">stage</span>(<span class="params"><span class="string">&#x27;Deploy&#x27;</span></span>)</span> &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                bat <span class="string">&#x27;xcopy .\\dist\\* C:\\tools\\personal\\github\\JenkinsDeploy\\dist\\ /s/e/y&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="12">
+<li>以后当你每次push代码到gitea的时候，gitea会通过webhook发送一个post请求给Jenkins，执行构建动作</li>
+</ol>
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161407281.png" class="">
+
+<img src="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E5%9F%BA%E4%BA%8EJenkins%E4%B8%8Egitea%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/image-20210220161453744.png" class="">
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://www.mdeditor.tw/pl/pXrV">https://www.mdeditor.tw/pl/pXrV</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8E%E4%B8%9A%E5%8A%A1%E6%A8%A1%E5%9D%97%E6%9E%84%E5%BB%BA/" rel="prev" title="前端项目搭建部署全流程（四）：脚手架与业务模块构建">
+                  <i class="fa fa-chevron-left"></i> 前端项目搭建部署全流程（四）：脚手架与业务模块构建
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/02/15/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Awebpack%E9%85%8D%E7%BD%AE/" rel="next" title="前端项目搭建部署全流程（二）：webpack配置">
+                  前端项目搭建部署全流程（二）：webpack配置 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">33</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
